@@ -1,11 +1,15 @@
-import Spinner from 'react-bootstrap/Spinner';
+import './spiner.scss';
 
-const BasicExample=()=> {
+
+
+
+const Spinner = () => {
   return (
-    <Spinner animation="border" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
+    <div className="loader-container">
+      <div className="loader"></div>
+      <p className="loader-text">Loading...</p>
+    </div>
   );
-}
+};
 
-export default BasicExample;
+export default Spinner;
