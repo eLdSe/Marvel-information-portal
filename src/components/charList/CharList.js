@@ -1,80 +1,83 @@
-import {Component } from 'react';
-
-import MarvelService from '../../services/MarvelService';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import Spinner from '../spiner/Spiner';
-
-import './charList.scss';
-import abyss from '../../resources/img/abyss.jpg';
+import { Component } from "react";
+import Spinner from "../spiner/Spiner";
+import ErrorMessage from "../errorMessage/ErrorMessage";
+import MarvelService from "../../services/MarvelService";
+import "./charList.scss";
 
 class CharList extends Component {
-    state={
-        chars:[],
-        loader:true,
-        error: false
-    }
-    
-    marvelServis = new MarvelService()
-    
+  state = {
+    charList: [],
+    loading: true,
+    error: false,
+  };
 
-    componentDidMount(){
-        this.onUpdateCharList(1)
-    }
+  marvelService = new MarvelService();
 
-    onUpdateCharList =(offset = 0)=>{
-        this.marvelServis
-            .getAllCharacters(offset)
-            .then(this.onCharListLoaded)
-            .catch(this.onError)
-    }
+  componentDidMount() {
+    this.marvelService
+      .getAllCharacters()
+      .then(this.onCharListLoaded)
+      .catch(this.onError);
+  }
 
-    onCharListLoaded =(chars)=>{
-        this.setState({
-            chars,
-            loader:false
-        });
-    } 
+  onCharListLoaded = (charList) => {
+    this.setState({
+      charList,
+      loading: false,
+    });
+  };
 
-    onError = () => {
-        this.setState({
-            error: true, 
-            loading: false });
-    }
+  onError = () => {
+    this.setState({
+      error: true,
+      loading: false,
+    });
+  };
+  renderItems(arr) {
+    const items = arr.map((item) => {
+      let imgStyle = { objectFit: "cover" };
+      if (
+        item.thumbnail ===
+        "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
+      ) {
+        imgStyle = { objectFit: "unset" };
+      }
 
-    renderItem = (chars) => {
-        if (!Array.isArray(chars)) return null;
+      return (
+        <li
+          className="char__item"
+          key={item.id}
+          onClick={() => this.props.onSelectedChar(item.id)}
+        >
+          <img src={item.thumbnail} alt={item.name} style={imgStyle} />
+          <div className="char__name">{item.name}</div>
+        </li>
+      );
+    });
+    // А эта конструкция вынесена для центровки спиннера/ошибки
+    return <ul className="char__grid">{items}</ul>;
+  }
 
-        return chars.map(char => (
-            <li key={char.name} className="char__item">
-                <img src={char.thumbnail || abyss} alt={char.name} />
-                <div className="char__name">{char.name}</div>
-            </li>
-        ));
-    }
+  render() {
+    const { charList, loading, error } = this.state;
 
+    const items = this.renderItems(charList);
 
+    const errorMessage = error ? <ErrorMessage /> : null;
+    const spinner = loading ? <Spinner /> : null;
+    const content = !(loading || error) ? items : null;
 
-    render(){
-        const {chars, loader , error} = this.state
-        const item = this.renderItem(chars)
-        const errorMessage = error? <ErrorMessage/> : null
-        const spinner = loader? <Spinner/> : null
-        return (
-            <div className="char__list">
-                {errorMessage}
-                {spinner}
-                <ul className="char__grid">
-                    {item}
-                </ul>
-                <button className="button button__main button__long">
-                    <div onClick={(e)=> {
-                        e.preventDefault();
-                        this.onUpdateCharList(chars.length)}} className="inner">load more</div>
-                </button>
-            </div>
-        )
-    }
-
+    return (
+      <div className="char__list">
+        {errorMessage}
+        {spinner}
+        {content}
+        <button className="button button__main button__long">
+          <div className="inner">load more</div>
+        </button>
+      </div>
+    );
+  }
 }
 
 export default CharList;
