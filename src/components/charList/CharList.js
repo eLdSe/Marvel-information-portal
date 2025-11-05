@@ -1,7 +1,9 @@
 import { Component } from "react";
+
 import Spinner from "../spiner/Spiner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import MarvelService from "../../services/MarvelService";
+
 import "./charList.scss";
 
 class CharList extends Component {
@@ -9,22 +11,44 @@ class CharList extends Component {
     charList: [],
     loading: true,
     error: false,
+    newItemLoading: false,
+    offset: 0,
+    charEnded: false, 
   };
 
   marvelService = new MarvelService();
 
   componentDidMount() {
-    this.marvelService
-      .getAllCharacters()
-      .then(this.onCharListLoaded)
-      .catch(this.onError);
+    this.onRequest();
   }
 
-  onCharListLoaded = (charList) => {
+  onRequest = (offset) => {
+    this.onCharListNewItemLoaded();
+    this.marvelService
+      .getAllCharacters(offset)
+      .then(this.onCharListLoaded)
+      .catch(this.onError);
+  };
+
+  onCharListNewItemLoaded = () => {
     this.setState({
-      charList,
-      loading: false,
+      newItemLoading: true,
     });
+  };
+
+  onCharListLoaded = (newCharList) => {
+    let end = false; 
+    if (newCharList.length < 9){
+      end = true
+    }
+
+    this.setState(({offset , charList}) =>({
+      charList: [...charList,...newCharList],
+      loading:false,
+      newItemLoading:false,
+      offset: offset+9,
+      charEnded:end
+    }))
   };
 
   onError = () => {
@@ -59,7 +83,7 @@ class CharList extends Component {
   }
 
   render() {
-    const { charList, loading, error } = this.state;
+    const { charList, loading, error, newItemLoading, offset , charEnded} = this.state;
 
     const items = this.renderItems(charList);
 
@@ -72,12 +96,19 @@ class CharList extends Component {
         {errorMessage}
         {spinner}
         {content}
-        <button className="button button__main button__long">
+        <button 
+          disabled={newItemLoading}
+          style={{'display': charEnded? 'none' : 'block'}} 
+          onClick={(e)=> {
+            e.preventDefault(); 
+            this.onRequest(offset);} }   
+            className="button button__main button__long">
           <div className="inner">load more</div>
         </button>
       </div>
     );
   }
 }
+
 
 export default CharList;
