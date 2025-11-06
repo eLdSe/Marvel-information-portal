@@ -13,7 +13,8 @@ class CharList extends Component {
     error: false,
     newItemLoading: false,
     offset: 0,
-    charEnded: false, 
+    charEnded: false,
+    charClose: false,
   };
 
   marvelService = new MarvelService();
@@ -37,18 +38,35 @@ class CharList extends Component {
   };
 
   onCharListLoaded = (newCharList) => {
-    let end = false; 
-    if (newCharList.length < 9){
-      end = true
+    let end = false;
+    let close = false;
+    if (newCharList.length < 9) {
+      end = true;
+      close = true;
     }
 
-    this.setState(({offset , charList}) =>({
-      charList: [...charList,...newCharList],
-      loading:false,
-      newItemLoading:false,
-      offset: offset+9,
-      charEnded:end
-    }))
+    this.setState(({ offset, charList }) => ({
+      charList: [...charList, ...newCharList],
+      loading: false,
+      newItemLoading: false,
+      offset: offset + 9,
+      charEnded: end,
+      charClose: close,
+    }));
+  };
+
+  onCharListClose = () => {
+    this.setState(({charList }) => {
+      if (charList.length <= 9) return null;
+
+      return {
+        charList: charList.slice(0, 9), 
+        offset: 9, 
+        charEnded: false,
+        charClose: false
+         
+      };
+    });
   };
 
   onError = () => {
@@ -83,7 +101,15 @@ class CharList extends Component {
   }
 
   render() {
-    const { charList, loading, error, newItemLoading, offset , charEnded} = this.state;
+    const {
+      charList,
+      loading,
+      error,
+      newItemLoading,
+      offset,
+      charEnded,
+      charClose,
+    } = this.state;
 
     const items = this.renderItems(charList);
 
@@ -96,19 +122,28 @@ class CharList extends Component {
         {errorMessage}
         {spinner}
         {content}
-        <button 
+        <button
           disabled={newItemLoading}
-          style={{'display': charEnded? 'none' : 'block'}} 
-          onClick={(e)=> {
-            e.preventDefault(); 
-            this.onRequest(offset);} }   
-            className="button button__main button__long">
+          style={{ display: charEnded ? "none" : "block" }}
+          onClick={(e) => {
+            e.preventDefault();
+            this.onRequest(offset);
+          }}
+          className="button button__main button__long"
+        >
           <div className="inner">load more</div>
+        </button>
+        <button
+          onClick={this.onCharListClose}
+          disabled={newItemLoading}
+          style={{ display: charClose ? "block" : "none" }}
+          className="button button__main button__long"
+        >
+          <div className="inner">close</div>
         </button>
       </div>
     );
   }
 }
-
 
 export default CharList;
