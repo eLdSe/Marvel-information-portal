@@ -99,7 +99,7 @@ const AuthFormBook3D = ({ onLogin, onRegister }) => {
 
                         <form className="page register-page" onSubmit={handleRegisterSubmit}>
                             <h2>Register</h2>
-                            <input type="text" name="name" placeholder="Name" value={registerData.name} onChange={handleRegisterChange} required />
+                            <input type="text" name="name" placeholder="Name and Surmane" value={registerData.name} onChange={handleRegisterChange} required />
                             <input type="email" name="email" placeholder="Email" value={registerData.email} onChange={handleRegisterChange} required />
                             <input type="password" name="password" placeholder="Password" value={registerData.password} onChange={handleRegisterChange} required />
                             <input type="password" name="confirmPassword" placeholder="Confirm Password" value={registerData.confirmPassword} onChange={handleRegisterChange} required />
