@@ -48,10 +48,12 @@ input::-webkit-inner-spin-button {
 }
 
 .app {
-    width: 1100px;
+    width: 100%;
+    max-width: 1100px;   // ограничиваем сверху
     margin: 0 auto;
-    padding: 50px 0 50px 0;
+    padding: 50px 20px;  // добавили боковые отступы на мобилках
     position: relative;
+
     .bg-decoration {
         position: absolute;
         right: -174px;
@@ -59,7 +61,6 @@ input::-webkit-inner-spin-button {
         z-index: -1;
     }
 }
-
 main {
     margin-top: 50px;
     position: relative;
@@ -78,5 +79,50 @@ main {
     }
     100% {
         opacity: 1
+    }
+}
+
+/* -------------------- АДАПТИВ -------------------- */
+
+/* 📱 Планшеты */
+@media (max-width: 992px) {
+    .app {
+        max-width: 900px;
+
+        .bg-decoration {
+            right: -120px;
+            bottom: -50px;
+            width: 35%;
+        }
+    }
+}
+
+/* 📱 Средние мобильные */
+@media (max-width: 768px) {
+    .app {
+        padding: 40px 15px;
+        max-width: 100%;
+    }
+
+    main {
+        margin-top: 30px;
+    }
+
+    .bg-decoration {
+        display: none; // убираем, чтобы не ломал адаптив
+    }
+}
+
+/* 📱 Маленькие телефоны */
+@media (max-width: 480px) {
+    .app {
+        padding: 30px 10px;
+    }
+}
+
+/* 📱 Очень маленькие */
+@media (max-width: 360px) {
+    .app {
+        padding: 20px 8px;
     }
 }

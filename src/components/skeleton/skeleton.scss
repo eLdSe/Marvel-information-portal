@@ -23,3 +23,66 @@
         margin-top: 15px;
     }
 }
+
+/* 📱 Планшеты */
+@media (max-width: 768px) {
+    .skeleton {
+        &__header {
+            grid-template-columns: 35px auto;
+            column-gap: 8px;
+        }
+        &__circle {
+            width: 35px;
+            height: 35px;
+        }
+        &__mini {
+            height: 14px;
+        }
+        &__block {
+            height: 30px;
+            margin-top: 12px;
+        }
+    }
+}
+
+/* 📱 Телефоны */
+@media (max-width: 480px) {
+    .skeleton {
+        &__header {
+            grid-template-columns: 30px auto;
+            column-gap: 6px;
+        }
+        &__circle {
+            width: 30px;
+            height: 30px;
+        }
+        &__mini {
+            height: 12px;
+        }
+        &__block {
+            height: 26px;
+            margin-top: 10px;
+        }
+    }
+}
+
+/* 📱 Очень маленькие */
+@media (max-width: 360px) {
+    .skeleton {
+        &__header {
+            grid-template-columns: 26px auto;
+            column-gap: 5px;
+        }
+        &__circle {
+            width: 26px;
+            height: 26px;
+        }
+        &__mini {
+            height: 10px;
+        }
+        &__block {
+            height: 22px;
+            margin-top: 8px;
+        }
+    }
+}

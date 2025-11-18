@@ -92,3 +92,67 @@
         filter: grayscale(.5);
     }
 }
+
+/* 📱 768px — планшеты */
+@media (max-width: 768px) {
+    .button {
+        font-size: 13px;
+
+        .inner {
+            padding: 0 14px;
+
+            &::before,
+            &::after {
+                border-width: 0 0 8px 8px;
+            }
+        }
+
+        &::before,
+        &::after {
+            height: 8px;
+        }
+
+        &__long {
+            width: 150px;
+        }
+    }
+}
+
+/* 📱 480px — мобильные телефоны */
+@media (max-width: 480px) {
+    .button {
+        font-size: 12px;
+        min-width: 90px;
+
+        .inner {
+            line-height: 16px;
+            padding: 0 10px;
+
+            &::before,
+            &::after {
+                border-width: 0 0 6px 6px;
+            }
+        }
+
+        &::before,
+        &::after {
+            height: 6px;
+        }
+
+        &__long {
+            width: 130px;
+            margin: 30px auto 0;
+        }
+    }
+}
+
+/* 📱 360px — очень маленькие экраны */
+@media (max-width: 360px) {
+    .button {
+        font-size: 11px;
+
+        .inner {
+            padding: 0 8px;
+        }
+    }
+}

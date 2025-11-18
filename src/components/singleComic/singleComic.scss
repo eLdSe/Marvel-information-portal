@@ -37,3 +37,100 @@
         }
     }
 }
+
+/* 🖥 1200px – планшеты в альбомной */
+@media (max-width: 1200px) {
+    .single-comic {
+        grid-template-columns: 250px 1fr auto;
+        column-gap: 30px;
+
+        &__img {
+            width: 250px;
+            height: 380px;
+        }
+    }
+}
+
+/* 📱 900px – планшеты */
+@media (max-width: 900px) {
+    .single-comic {
+        grid-template-columns: 240px 1fr;
+        grid-template-areas:
+            "img name"
+            "img descr"
+            "img price"
+            "back back";
+        row-gap: 20px;
+
+        &__img {
+            grid-area: img;
+        }
+
+        &__name {
+            grid-area: name;
+        }
+
+        &__descr {
+            grid-area: descr;
+        }
+
+        &__price {
+            grid-area: price;
+        }
+
+        &__back {
+            justify-self: start;
+            grid-area: back;
+            margin-top: 10px;
+        }
+    }
+}
+
+/* 📱 700px – телефоны, ширина уже маленькая */
+@media (max-width: 700px) {
+    .single-comic {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "img"
+            "name"
+            "descr"
+            "price"
+            "back";
+
+        text-align: center;
+
+        &__img {
+            justify-self: center;
+            width: 70%;
+            max-width: 280px;
+            height: auto;
+        }
+
+        &__back {
+            justify-self: center;
+        }
+    }
+}
+
+/* 📱 450px – очень маленькие смартфоны */
+@media (max-width: 450px) {
+    .single-comic {
+        margin-top: 30px;
+
+        &__name {
+            font-size: 20px;
+        }
+
+        &__descr {
+            font-size: 16px;
+        }
+
+        &__price {
+            font-size: 20px;
+        }
+
+        &__img {
+            width: 90%;
+        }
+    }
+}

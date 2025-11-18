@@ -1,31 +1,119 @@
 @import '../../style/variables.scss';
 
 .app {
-    &__header {
-        display: flex;
-        justify-content: space-between;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 10px;
+      padding: 0 10px;
     }
-    &__title {
-        font-weight: bold;
-        font-size: 28px;
-        line-height: 37px;
-        span {
-            color: $main-color;
-        }
+
+    .active-link {
+      color: #9F0013;
+      font-weight: bold;
+      border-bottom: 2px solid #9F0013;
     }
-    &__menu {
-        ul {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 24px;
-            line-height: 32px;
-            li {
-                margin: 0 8px;
-                a:hover {
-                    color: $main-color;
-                }
-            }
-        }
+
+    .login-button {
+      padding: 8px 15px;
+      border-radius: 8px;
+      border: none;
+      background-color: $main-color;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+
+      /* плавный переход для всех свойств */
+      transition: background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+
+      &:hover {
+        background-color: darken($main-color, 10%);
+      }
+
+      &.active {
+        background-color: $dark;
+        color: #9F0013;
+        box-shadow: 0 0 10px #9F0013;
+        transform: scale(1.05);
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+      }
     }
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: 28px;
+    line-height: 37px;
+
+    span {
+      color: $main-color;
+    }
+
+    @media (max-width: 1024px) {
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+      line-height: 28px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 18px;
+      line-height: 24px;
+    }
+  }
+
+  .app__menu {
+    ul {
+      display: flex;
+      justify-content: flex-start; // выравниваем слева
+      gap: 15px; // промежутки между пунктами
+      font-weight: bold;
+      font-size: 24px;
+      line-height: 32px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+
+      a:hover {
+        color: $main-color;
+      }
+
+      @media (max-width: 1024px) {
+        font-size: 20px;
+        line-height: 28px;
+        gap: 12px;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 18px;
+        line-height: 24px;
+        gap: 10px; // немного меньше
+      }
+
+      @media (max-width: 480px) {
+        font-size: 16px;
+        line-height: 20px;
+        gap: 8px; // минимальный промежуток
+      }
+    }
+  }
 }

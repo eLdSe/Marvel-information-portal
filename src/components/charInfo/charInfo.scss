@@ -2,64 +2,152 @@
 
 .char {
     &__info {
+        position: sticky;
+        top: 100px; 
         padding: 25px;
         box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
-        position: relative;
         z-index: 5;
         background-color: #fff;
+
         &-name {
             font-weight: bold;
             font-size: 22px;
             line-height: 29px;
             text-transform: uppercase;
         }
+
         .skeleton {
             margin-top: 30px;
         }
+
+        @media (max-width: 1024px) {
+            top: 80px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            position: static; // sticky ломает лэйаут на телефонах
+            padding: 20px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 15px;
+        }
     }
+
     &__basics {
         display: grid;
         grid-template-columns: 150px auto;
         column-gap: 25px;
+
         img {
             width: 150px;
             height: 150px;
             object-fit: cover;
         }
+
+        @media (max-width: 1024px) {
+            grid-template-columns: 120px auto;
+
+            img {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            grid-template-columns: 100px auto;
+
+            img {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: 1fr;
+            text-align: center;
+
+            img {
+                margin: 0 auto;
+                width: 150px;
+                height: 150px;
+            }
+        }
     }
+
     &__btns {
         margin-top: 35px;
+
         a:nth-child(2) {
             margin-top: 10px;
         }
+
+        @media (max-width: 480px) {
+            a {
+                width: 100%;
+                text-align: center;
+            }
+        }
     }
+
     &__descr {
         margin-top: 15px;
         font-size: 14px;
         line-height: 18px;
+
+        @media (max-width: 768px) {
+            font-size: 13px;
+            line-height: 17px;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 12px;
+            line-height: 16px;
+        }
     }
+
     &__comics {
         font-weight: bold;
         font-size: 18px;
         line-height: 24px;
         margin-top: 10px;
+
+        @media (max-width: 768px) {
+            font-size: 16px;
+        }
+
         &-list {
             position: relative;
             margin-top: 10px;
         }
+
         &-item {
             width: 100%;
             padding: 0px 10px;
             line-height: 25px;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             margin-top: 10px;
+
+            @media (max-width: 480px) {
+                padding: 0 6px;
+                font-size: 14px;
+            }
         }
     }
+
     &__select {
         font-weight: bold;
         font-size: 18px;
         line-height: 24px;
         text-align: center;
-    }
 
+        @media (max-width: 768px) {
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 14px;
+        }
+    }
 }

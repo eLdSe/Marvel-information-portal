@@ -66,7 +66,7 @@ class CharInfo extends Component {
       <div className="char__info">
         {skeleton}
         {errorMessage}
-        {spinner}
+        {spinner} 
         {content}
       </div>
     );
