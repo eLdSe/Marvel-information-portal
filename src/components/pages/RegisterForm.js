@@ -17,13 +17,13 @@ const AuthFormBook3D = ({ onLogin, onRegister }) => {
     const handleLoginChange = (e) => setLoginData({ ...loginData, [e.target.name]: e.target.value });
     const handleRegisterChange = (e) => setRegisterData({ ...registerData, [e.target.name]: e.target.value });
 
-    const clearValues = ()=>{
+    const clearValues = () => {
         setLoginData({ email: "", password: "" });
         setError(false)
-        setRegisterData({name: "", email: "", password: "", confirmPassword: "", });
+        setRegisterData({ name: "", email: "", password: "", confirmPassword: "", });
         setErrorMessage('')
     }
-
+    
     const handleLoginSubmit = (e) => {
         e.preventDefault();
         if (loginData.password.length < 6) {
@@ -35,7 +35,6 @@ const AuthFormBook3D = ({ onLogin, onRegister }) => {
             setMessage("Successfully logged in! ");
             onLogin && onLogin(loginData);
             setError(false)
-            setLoginData({ email: "", password: "" });
             setTimeout(() => {
                 setMessage("")
             }, 4000);
@@ -58,7 +57,7 @@ const AuthFormBook3D = ({ onLogin, onRegister }) => {
             setMessage("You have registered. Welcome !");
             onRegister && onRegister(registerData);
             setError(false)
-            setRegisterData({name: "", email: "", password: "", confirmPassword: "", });
+            setRegisterData({ name: "", email: "", password: "", confirmPassword: "", });
             setTimeout(() => {
                 setMessage("")
             }, 4000);
@@ -76,13 +75,13 @@ const AuthFormBook3D = ({ onLogin, onRegister }) => {
                 <div className="tabs">
                     <button
                         className={activeTab === "login" ? "active" : ""}
-                        onClick={() => {setActiveTab("login"); clearValues()}}
+                        onClick={() => { setActiveTab("login"); clearValues() }}
                     >
                         Login
                     </button>
                     <button
                         className={activeTab === "register" ? "active" : ""}
-                        onClick={() => {setActiveTab("register"); clearValues()}}
+                        onClick={() => { setActiveTab("register"); clearValues() }}
                     >
                         Register
                     </button>
