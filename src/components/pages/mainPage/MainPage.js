@@ -1,8 +1,8 @@
-import RandomChar from "../randomChar/RandomChar";
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
-import ErrorBoundary from "../errorBoundary/ErrorBoundary";
-import decoration from "../../resources/img/vision.png";
+import RandomChar from "../../randomChar/RandomChar";
+import CharList from "../../charList/CharList";
+import CharInfo from "../../charInfo/CharInfo";
+import ErrorBoundary from "../../errorBoundary/ErrorBoundary";
+import decoration from "../../../resources/img/vision.png";
 
 
 import { useState} from "react";
@@ -10,6 +10,7 @@ import { useState} from "react";
 
 const MainPage = () => {
     const [selectedChar, setChar] = useState(null);
+
 
     const onSelectedChar = (id) => {
         setChar(id);

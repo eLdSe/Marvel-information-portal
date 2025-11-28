@@ -1,8 +1,15 @@
-import { Route, Routes,} from "react-router-dom";
+import { Route, Routes, } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
-import { MainPage, ComicsPage, RegisterForm } from "../pages";
 import AppHeader from "../appHeader/AppHeader";
+import Spinner from "../spiner/Spiner";
 
+
+const NotFound404 = lazy(() => import('../pages/404/404'))
+const MainPage = lazy(() => import('../pages/mainPage/MainPage'))
+const ComicsPage = lazy(() => import('../pages/comicsPage/ComicsPage'))
+const RegisterForm = lazy(() => import('../pages/registerForm/RegisterForm'))
+const SingleComic = lazy(() => import('../pages/singleComic/SingleComic'))
 
 
 const App = () => {
@@ -10,11 +17,15 @@ const App = () => {
     <div className="app">
       <AppHeader />
       <main>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/comics" element={<ComicsPage />} />
-          <Route path="/login" element={<RegisterForm />} />
-        </Routes>
+        <Suspense fallback={<Spinner/>}>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/comics" element={<ComicsPage />} />
+            <Route path="/login" element={<RegisterForm />} />
+            <Route path="/comics/:comicId" element={<SingleComic />} />
+            <Route path="*" element={<NotFound404 />} />
+          </Routes>
+        </Suspense>
       </main>
     </div>
   );
