@@ -1,5 +1,5 @@
 import './errorMessage.scss';
-import { AlertTriangle } from 'lucide-react'; // красивая SVG иконка
+import { AlertTriangle } from 'lucide-react'; 
 
 const ErrorMessage = ({ message = "Something went wrong" }) => {
   return (
