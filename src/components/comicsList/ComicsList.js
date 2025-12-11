@@ -1,5 +1,10 @@
-import { useState, useEffect } from 'react';
+import React ,{ useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import {
+    CSSTransition,
+    TransitionGroup,
+} from 'react-transition-group';
+
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spiner/Spiner';
@@ -16,13 +21,21 @@ const ComicsList = () => {
     const [comicsClose, setComicsClose] = useState(false)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-
+    const refs = useRef([])
 
     const marvelService = new useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
     }, [])
+
+
+    useEffect(() => {
+        refs.current = new Array(comicsList.length)
+            .fill(null)
+            .map(() => React.createRef());
+    }, [comicsList]);
+
 
     const onRequest = (offset, initial) => {
         initial ? setnewItemLoading(false) : setnewItemLoading(true);
@@ -64,21 +77,27 @@ const ComicsList = () => {
 
     function renderItems(arr) {
         const items = arr.map((item, i) => {
+            if (!refs.current[i]) {
+                refs.current[i] = React.createRef();
+            }
             return (
-                <li className="comics__item" key={i}>
-                    <Link to={`/comics/${item.id}`}>
-                        <img src={item.thumbnail} alt={item.title} className="comics__item-img" />
-                        <div className="comics__item-name">{item.title}</div>
-                        <div className="comics__item-price">{item.price}</div>
-                    </Link>
-                </li>
+                <CSSTransition key={i} nodeRef={refs.current[i]} timeout={500} classNames='comics__item'>
+                    <li ref={refs.current[i]}>
+                        <Link to={`/comics/${item.id}`}>
+                            <img src={item.thumbnail} alt={item.title} className="comics__item-img" />
+                            <div className="comics__item-name">{item.title}</div>
+                            <div className="comics__item-price">{item.price}</div>
+                        </Link>
+                    </li>
+                </CSSTransition>
+
             )
         })
 
         return (
-            <ul className="comics__grid">
+            <TransitionGroup component='ul' className="comics__grid" appear={true}>
                 {items}
-            </ul>
+            </TransitionGroup>
         )
     }
 

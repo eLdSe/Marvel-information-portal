@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 
 import AppHeader from "../appHeader/AppHeader";
 import Spinner from "../spiner/Spiner";
+import CharacterPage from "../characterPage/CharacterPage";
 
 
 const NotFound404 = lazy(() => import('../pages/404/404'))
@@ -23,6 +24,7 @@ const App = () => {
             <Route path="/comics" element={<ComicsPage />} />
             <Route path="/login" element={<RegisterForm />} />
             <Route path="/comics/:comicId" element={<SingleComic />} />
+             <Route path="/characters/:id" element={<CharacterPage />} />
             <Route path="*" element={<NotFound404 />} />
           </Routes>
         </Suspense>

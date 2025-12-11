@@ -1,4 +1,8 @@
-import { useEffect,useState} from "react";
+import React, { useEffect, useState, useRef, createRef } from "react";
+import {
+  CSSTransition,
+  TransitionGroup,
+} from 'react-transition-group';
 
 import Spinner from "../spiner/Spiner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -6,7 +10,7 @@ import MarvelService from "../../services/MarvelService";
 
 import "./charList.scss";
 
-const CharList =(props)=> {
+const CharList = (props) => {
 
   const [charList, setCharList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -15,13 +19,21 @@ const CharList =(props)=> {
   const [offset, setOffset] = useState(0)
   const [charEnded, setCharEnded] = useState(false)
   const [charClose, setCharClose] = useState(false)
+  const refs = useRef([]);
+
 
 
   const marvelService = new MarvelService();
 
-  useEffect(()=>{
+  useEffect(() => {
     onRequest()
   }, [])
+
+  useEffect(() => {
+    refs.current = new Array(charList.length)
+      .fill(null)
+      .map(() => React.createRef());
+  }, [charList]);
 
   const onRequest = (offset) => {
     onCharListNewItemLoaded();
@@ -43,7 +55,7 @@ const CharList =(props)=> {
       end = true;
       close = true;
     }
-    
+
     setCharList(charList => [...charList, ...newCharList])
     setLoading(false)
     setNewItemLoading(false)
@@ -55,7 +67,7 @@ const CharList =(props)=> {
 
   const onCharListClose = () => {
     if (charList.length <= 9) return null;
-    
+
     setCharList(charList => charList.slice(0, 9),)
     setOffset(9)
     setCharEnded(false)
@@ -68,8 +80,12 @@ const CharList =(props)=> {
     setLoading(false)
   };
 
+
   function renderItems(arr) {
-    const items = arr.map((item) => {
+    const items = arr.map((item, i) => {
+      if (!refs.current[i]) {
+        refs.current[i] = React.createRef();
+      }
       let imgStyle = { objectFit: "cover" };
       if (
         item.thumbnail ===
@@ -80,22 +96,25 @@ const CharList =(props)=> {
       const idSelected = props.isSelected === item.id
 
       return (
-        <li
-          className={`char__item ${idSelected? 'char__item_selected': ''}`}
-          key={item.id}
-          onClick={() =>  props.onSelectedChar(item.id)}
-          tabIndex={0}
-        >
-          <img src={item.thumbnail} alt={item.name} style={imgStyle} />
-          <div className="char__name">{item.name}</div>
-        </li>
+        <CSSTransition key={item.id} nodeRef={refs.current[i]} timeout={500} classNames='char__item'>
+
+          <li ref={refs.current[i]}
+            className={`char__item ${idSelected ? 'char__item_selected' : ''}`}
+            onClick={() => props.onSelectedChar(item.id)}
+            tabIndex={0}
+          >
+            <img src={item.thumbnail} alt={item.name} style={imgStyle} />
+            <div className="char__name">{item.name}</div>
+          </li>
+        </CSSTransition>
+
       );
     });
-    // А эта конструкция вынесена для центровки спиннера/ошибки
+
     return (
-      <ul className="char__grid">
+      <TransitionGroup component='ul' className="char__grid" appear={true}>
         {items}
-      </ul>
+      </TransitionGroup>
     )
   }
 
@@ -111,6 +130,7 @@ const CharList =(props)=> {
       {errorMessage}
       {spinner}
       {content}
+
       <button
         disabled={newItemLoading}
         style={{ display: charEnded ? "none" : "block" }}

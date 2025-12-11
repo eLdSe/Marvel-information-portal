@@ -1,0 +1,139 @@
+.char {
+    &__search {
+        margin-top: 10px;
+        margin-bottom: 35px;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+        background-color: #fff;
+
+        @media (max-width: 768px) {
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    }
+
+    &__search-title {
+        font-weight: bold;
+        font-size: 22px;
+        margin-bottom: 20px;
+
+        @media (max-width: 480px) {
+            font-size: 18px;
+        }
+    }
+
+    &__search-form {
+        display: flex;
+        gap: 15px;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+        }
+    }
+
+    &__search-input {
+        flex: 1;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        outline: none;
+        transition: 0.3s;
+
+        &:focus {
+            border-color: #9f0013;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 14px;
+        }
+    }
+
+
+    &__search-btn {
+        padding: 10px 25px;
+        background-color: #9f0013;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+            background-color: #b30016;
+        }
+
+        @media (max-width: 480px) {
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+        }
+    }
+
+    &__search-card {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;
+        border: 1px solid #555;
+        border-radius: 8px;
+    }
+
+    &__search-img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 6px;
+
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+
+
+    }
+
+    &__search-info h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #fff;
+    }
+
+    &__search-result {
+        margin-top: 20px;
+
+        .char__search-success {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .char__search-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #9f0013;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+
+            &:hover {
+                background-color: #b30016;
+            }
+        }
+    }
+
+    &__search-error {
+        margin-top: 15px;
+        color: red;
+        font-weight: bold;
+    }
+}

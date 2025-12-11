@@ -1,6 +1,5 @@
 class MarvelService {
     _apiBase = 'https://marvel-server-zeta.vercel.app/';
-    // ЗДЕСЬ БУДЕТ ВАШ КЛЮЧ, ЭТОТ КЛЮЧ МОЖЕТ НЕ РАБОТАТЬ
     _apiKey = 'apikey=d4eecb0c66dedbfae4eab45d312fc1df';
     _baseOffset = 0;
 
@@ -21,9 +20,20 @@ class MarvelService {
 
     getCharacter = async (id) => {
         const res = await this.getResource(`${this._apiBase}characters/${id}?${this._apiKey}`);
+        console.log(res)
         return this._transformChar(res.data.results[0])
     }
+    getCharacterByName = async (name) => {
+        const res = await this.getResource(
+            `${this._apiBase}characters?nameStartsWith=${name}&${this._apiKey}`
+        );
 
+        const chars = res.data.results.map(this._transformChar);
+
+        return chars.filter(
+            char => char.name.toLowerCase() === name.toLowerCase()
+        );
+    };
     getAllComics = async (offset = 0) => {
         const res = await this.getResource(
             `${this._apiBase}comics?orderBy=issueNumber&limit=8&offset=${offset}&${this._apiKey}`
@@ -40,7 +50,7 @@ class MarvelService {
         return {
             id: char.id,
             name: char.name || 'No name',
-            description: char.description ? `${char.description.slice(0, 500)}...` : 'There is no description for this character',
+            description: char.description ? `${char.description.slice(0, 500)}` : 'There is no description for this character',
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,
