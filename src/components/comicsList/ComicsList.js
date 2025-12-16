@@ -1,4 +1,4 @@
-import React ,{ useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
     CSSTransition,
@@ -6,11 +6,14 @@ import {
 } from 'react-transition-group';
 
 
-import useMarvelService from '../../services/MarvelService';
+import MarvelService from '../../services/MarvelService';
 import Spinner from '../spiner/Spiner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './comicsList.scss';
+
+
+const marvelService = new MarvelService();
 
 const ComicsList = () => {
 
@@ -23,13 +26,13 @@ const ComicsList = () => {
     const [error, setError] = useState(false)
     const refs = useRef([])
 
-    const marvelService = new useMarvelService();
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         onRequest(offset, true);
     }, [])
 
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         refs.current = new Array(comicsList.length)
             .fill(null)

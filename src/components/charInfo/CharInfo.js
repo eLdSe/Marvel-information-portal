@@ -1,4 +1,4 @@
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spiner/Spiner";
@@ -7,21 +7,22 @@ import Skeleton from "../skeleton/Skeleton";
 
 import "./charInfo.scss";
 
-const CharInfo = ({selectedChar}) => {
+
+const marvelService = new MarvelService();
+const CharInfo = ({ selectedChar }) => {
 
   const [char, setChar] = useState(null)
   const [Loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  const marvelService = new MarvelService();
 
-  useEffect(()=>{
+  useEffect(() => {
     updateChar()
-  },[])
+  }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     updateChar()
-  },[selectedChar])
+  }, [selectedChar])
 
 
   const updateChar = () => {

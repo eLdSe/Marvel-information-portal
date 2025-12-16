@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, createRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   CSSTransition,
   TransitionGroup,
@@ -9,6 +9,9 @@ import ErrorMessage from "../errorMessage/ErrorMessage";
 import MarvelService from "../../services/MarvelService";
 
 import "./charList.scss";
+
+
+const marvelService = new MarvelService();
 
 const CharList = (props) => {
 
@@ -23,11 +26,17 @@ const CharList = (props) => {
 
 
 
-  const marvelService = new MarvelService();
+  const onRequest = useCallback((offset = 0) => {
+    onCharListNewItemLoaded();
+    marvelService
+      .getAllCharacters(offset)
+      .then(onCharListLoaded)
+      .catch(onError);
+  }, []);
 
   useEffect(() => {
-    onRequest()
-  }, [])
+    onRequest(0)
+  }, [onRequest])
 
   useEffect(() => {
     refs.current = new Array(charList.length)
@@ -35,13 +44,7 @@ const CharList = (props) => {
       .map(() => React.createRef());
   }, [charList]);
 
-  const onRequest = (offset) => {
-    onCharListNewItemLoaded();
-    marvelService
-      .getAllCharacters(offset)
-      .then(onCharListLoaded)
-      .catch(onError);
-  };
+
 
   const onCharListNewItemLoaded = () => {
     setNewItemLoading(true)

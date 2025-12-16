@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useCallback} from "react";
+import { Helmet } from 'react-helmet';
 
 import Spinner from "../../spiner/Spiner";
 import ErrorMessage from "../../errorMessage/ErrorMessage";
@@ -8,6 +9,7 @@ import Skeleton from '../../skeleton/Skeleton';
 
 import './singleComic.scss';
 
+const marvelService = new MarvelService();
 
 const SingleComic = () => {
 
@@ -18,20 +20,19 @@ const SingleComic = () => {
     const { comicId } = useParams()
 
 
-    const marvelService = new MarvelService();
-
-    useEffect(() => {
-        updateComic()
-    }, [comicId])
-
-
-    const updateComic = () => {
+    const updateComic = useCallback(() => {
         onComicLoading();
         marvelService
             .getComics(comicId)
             .then(onComicLoad)
             .catch(onError);
-    };
+    }, [comicId]);
+
+
+    useEffect(() => {
+        updateComic();
+    }, [updateComic]);
+
 
     const onComicLoad = (comic) => {
         setComic(comic)
@@ -63,9 +64,17 @@ const SingleComic = () => {
 }
 
 const View = ({ comic }) => {
-    const {title, decoration, pageCount, thumbnail, language,price} = comic
+    const { title, decoration, pageCount, thumbnail, language, price } = comic
     return (
         <>
+            <Helmet>
+                <meta
+                    name="description"
+                    content={`${title} information page`}
+                />
+                <title>{title}</title>
+            </Helmet>
+
             <img src={thumbnail} alt={title} className="single-comic__img" />
             <div className="single-comic__info">
                 <h2 className="single-comic__name">{title}</h2>

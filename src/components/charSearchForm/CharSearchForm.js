@@ -6,12 +6,14 @@ import MarvelService from "../../services/MarvelService";
 
 import "./charSearchForm.scss";
 
+
+const marvelService = new MarvelService();
+
 const CharSearchForm = () => {
     const [char, setChar] = useState(null);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const marvelService = new MarvelService();
 
     const resultRef = useRef(null);
     const inputRef = useRef(null);

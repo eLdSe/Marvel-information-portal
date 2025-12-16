@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import MarvelService from "../../services/MarvelService";
 
 import "./characterPage.scss";
 
+const marvelService = new MarvelService();
 const CharacterPage = () => {
     const { id } = useParams();
     const [char, setChar] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
-    const marvelService = new MarvelService();
 
     useEffect(() => {
         setLoading(true);
@@ -27,6 +28,13 @@ const CharacterPage = () => {
 
     return (
         <div className="char-page">
+            <Helmet>
+                <meta
+                    name="description"
+                    content={`${char.name} information page`}
+                />
+                <title>{char.name}</title>
+            </Helmet>
             <div className="char-page__wrapper">
                 <img
                     src={char.thumbnail}

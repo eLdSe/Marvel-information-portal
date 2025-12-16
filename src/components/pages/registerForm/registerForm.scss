@@ -1,6 +1,5 @@
 @import '/src/style/variables.scss';
 
-
 .container::before {
     content: "";
     position: fixed;
@@ -9,15 +8,37 @@
     width: 100vw;
     height: 100vh;
     background: url('../../../resources/img/spiderMan.jpg') center/cover no-repeat;
-    z-index: -1; 
+    z-index: -1;
+}
+
+.success-message {
+    margin-top: 10px;
+    padding: 12px;
+    background: #e2ffe2;
+    color: #0a6b0a;
+    border: 1px solid #7ee27e;
+    border-radius: 6px;
+    font-weight: 600;
+    animation: fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .error-message {
+    margin-top: 4px;
     color: #d90000;
     font-size: 13px;
-    margin-top: -11px;
     white-space: nowrap;
-    z-index: 10;
 }
 
 .notification {
@@ -47,9 +68,9 @@
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
-    perspective: 1200px;
     padding: 30px;
     color: #fff;
+    overflow: hidden; // важное!
 
     .tabs {
         display: flex;
@@ -72,88 +93,75 @@
                 border-bottom: 2px solid #9F0013;
             }
 
-            // активная вкладка красным
             &:hover {
                 color: #9F0013;
             }
-
-            // hover красным
         }
     }
 
     .book-container {
-        width: 100%;
-        height: 400px;
         position: relative;
+        width: 200%; // две страницы рядом
+        display: flex;
+        transition: transform 0.5s ease-in-out;
 
-        .book {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1s ease-in-out;
-
-            &.flipped {
-                transform: rotateY(-180deg);
-            }
-
-            .page {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                backface-visibility: hidden;
-                border-radius: 12px;
-                padding: 25px;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                background-color: rgba($dark, 1); // фон формы
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-
-                input {
-                    padding: 12px 15px;
-                    border-radius: 8px;
-                    border: none;
-                    outline: none;
-                    font-size: 16px;
-                    color: #fff;
-                    background-color: rgba(255, 255, 255, 0.05);
-                }
-
-                button {
-                    padding: 12px;
-                    border-radius: 8px;
-                    border: none;
-                    background-color: #9F0013; // новый красный
-                    color: #fff;
-                    font-size: 18px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: 0.3s;
-
-                    &:hover {
-                        background-color: darken(#9F0013, 10%);
-                    }
-                }
-            }
-
-            .login-page {
-                transform: rotateY(0deg);
-                z-index: 2;
-            }
-
-            .register-page {
-                transform: rotateY(180deg);
-                z-index: 1;
-            }
+        &.shift-left {
+            transform: translateX(-50%); // смещение на страницу регистрации
         }
     }
 
-    @media (max-width: 768px) {
-        padding: 20px;
+    .page {
+        width: 50%;
+        min-height: 450px;
+        border-radius: 12px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background-color: rgba($dark, 1);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+        transition:
+            opacity 0.35s ease,
+            transform 0.35s ease,
+            z-index 0.35s ease;
 
-        .book-container {
-            height: 450px;
+        // базовое состояние — скрытая страница
+        opacity: 0.5;
+        transform: scale(0.92); // уменьшена = дальше
+        z-index: 1;
+
+        &.active {
+            opacity: 1;
+            transform: scale(1); // нормальный размер = ближе
+            z-index: 2; // поверх
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #9F0013;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:hover {
+                background-color: darken(#9F0013, 10%);
+            }
         }
     }
 }
