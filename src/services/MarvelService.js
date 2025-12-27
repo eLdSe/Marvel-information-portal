@@ -4,7 +4,7 @@ const useMarvelService = () => {
     const { loading, request, error, clearError,process,setProcess} = useHttp()
 
     const _apiBase = 'https://marvel-server-zeta.vercel.app/';
-    const _apiKey = 'apikey=d4eecb0c66dedbfae4eab45d312fc1df';
+    const _apiKey = 'apikey=d4eecb0c66dedbfae4eab45d312fc1df'; /* this not my key, if you want to use it, you need to get your own key from Marvel Developer Portal */
     const _baseOffset = 0;
 
 
