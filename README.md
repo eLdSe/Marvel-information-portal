@@ -7,7 +7,7 @@ The project was created as an educational pet project to demonstrate frontend de
 ---
 
 ## 📸 Screenshots
-![Home Page](../resources/x-men.png)
+![Home Page](resources/img/x-men.png)
 
 ---
 ## 🚀 Project Overview
