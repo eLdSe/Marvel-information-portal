@@ -7,9 +7,23 @@ The project was created as an educational pet project to demonstrate frontend de
 ---
 
 ## 📸 Screenshots
+
+### 🏠 Home Page
 ![Home Page](src/screenshots/home.png)
+
+---
+
+### 🦸 Characters Page
 ![Characters Page](src/screenshots/characters.png)
+
+---
+
+### 📚 Comics Page
 ![Comics Page](src/screenshots/comics.png)
+
+---
+
+### 🔐 Login Page
 ![Login Page](src/screenshots/login.png)
 
 
