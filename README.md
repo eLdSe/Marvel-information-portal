@@ -52,12 +52,11 @@ The backend is not publicly available, but the registration and authentication l
 ## ⚙️ Installation & Run
 
 Clone the repository:
-git clone https://github.com/your-username/Marvel-information-portal.git
 cd marvel
 npm install
 npm start
 http://localhost:3000
 
 ```bash
-
+git clone https://github.com/your-username/Marvel-information-portal.git
 
