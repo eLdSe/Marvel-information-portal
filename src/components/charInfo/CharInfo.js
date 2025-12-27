@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spiner/Spiner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Skeleton from "../skeleton/Skeleton";
@@ -8,13 +8,11 @@ import Skeleton from "../skeleton/Skeleton";
 import "./charInfo.scss";
 
 
-const marvelService = new MarvelService();
 const CharInfo = ({ selectedChar }) => {
 
   const [char, setChar] = useState(null)
-  const [Loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
 
+  const { getCharacter, process, setProcess, clearError } = useMarvelService()
 
   useEffect(() => {
     updateChar()
@@ -27,39 +25,42 @@ const CharInfo = ({ selectedChar }) => {
 
   const updateChar = () => {
     if (!selectedChar) return;
-    onCharLoading();
-    marvelService
-      .getCharacter(selectedChar)
+
+    clearError()
+    getCharacter(selectedChar)
       .then(onCharLoad)
-      .catch(onError);
+      .then(() => setProcess('confirmed'))
   };
 
   const onCharLoad = (char) => {
     setChar(char)
-    setLoading(false)
-  };
-
-  const onError = () => {
-    setLoading(false)
-    setError(true)
-  };
-
-  const onCharLoading = () => {
-    setLoading(true)
   };
 
 
-  const skeleton = char || Loading || error ? null : <Skeleton />;
-  const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = Loading ? <Spinner /> : null;
-  const content = !(Loading || error || !char) ? <View char={char} /> : null;
+  const setContent = (process, char) => {
+    switch (process) {
+      case 'waiting':
+        return <Skeleton />
+        break
+      case 'loadind':
+        return <Spinner />
+        break
+      case 'confirmed':
+        return <View char={char} />
+        break
+      case 'error':
+        return <ErrorMessage />
+        break
+      default:
+        throw new Error('Unexpected process state !');
+        break
+    }
+  }
+
 
   return (
     <div className="char__info">
-      {skeleton}
-      {errorMessage}
-      {spinner}
-      {content}
+      {setContent(process, char)}
     </div>
   );
 }

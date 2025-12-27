@@ -1,6 +1,52 @@
 @import '../../style/variables.scss';
 
+
+
+.profile__btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.profile__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2f2f2f;
+  border: 1px solid #444;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.profile__btn:hover .profile__avatar {
+  transform: scale(1.05);
+}
+
+/* ГОЛОВА */
+.avatar__head {
+  width: 10px;
+  height: 10px;
+  background: #bdbdbd;
+  border-radius: 50%;
+  margin-bottom: 2px;
+}
+
+/* ПЛЕЧИ / ТЕЛО */
+.avatar__body {
+  width: 16px;
+  height: 8px;
+  background: #bdbdbd;
+  border-radius: 8px 8px 2px 2px;
+}
+
+
 .app {
+
   &__header {
     display: flex;
     justify-content: space-between;
@@ -30,7 +76,6 @@
       cursor: pointer;
       text-decoration: none;
 
-      /* плавный переход для всех свойств */
       transition: background-color 0.3s ease,
         color 0.3s ease,
         box-shadow 0.3s ease,
@@ -40,11 +85,6 @@
         background-color: darken($main-color, 10%);
       }
 
-      &.active {
-        color:#fff;
-        box-shadow: 0 0 10px #9F0013;
-        transform: scale(1.05);
-      }
 
       @media (max-width: 768px) {
         width: 100%;
@@ -53,6 +93,7 @@
       }
     }
   }
+
 
   &__title {
     font-weight: bold;

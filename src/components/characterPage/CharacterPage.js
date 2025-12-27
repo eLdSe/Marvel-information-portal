@@ -2,28 +2,24 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 
 import "./characterPage.scss";
+import Spinner from "../spiner/Spiner";
 
-const marvelService = new MarvelService();
 const CharacterPage = () => {
     const { id } = useParams();
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
 
+
+    const { getCharacter, loading, error } = useMarvelService();
 
     useEffect(() => {
-        setLoading(true);
-        marvelService
-            .getCharacter(id)
+        getCharacter(id)
             .then(setChar)
-            .catch(() => setError(true))
-            .finally(() => setLoading(false));
     }, [id]);
 
-    if (loading) return <div className="char-page__loading">Loading...</div>;
+    if (loading) return <Spinner />;
     if (error || !char) return <div className="char-page__error">Character not found</div>;
 
     return (

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
+import { useNavigate } from 'react-router-dom';
+
 import { Helmet } from "react-helmet";
 import * as Yup from "yup";
 
@@ -21,12 +23,13 @@ const InputField = ({ label, name, type, formik, placeholder, autoComplete }) =>
         />
 
         {formik.errors[name] && formik.touched[name] && (
-            <div className="error-message">{formik.errors[name]}</div>
+            <div className="hata-message">{formik.errors[name]}</div>
         )}
     </div>
 );
 
-const AuthFormBook3D = () => {
+const AuthFormBook3D = (props) => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("login");
     const [message, setMessage] = useState("")
 
@@ -34,15 +37,40 @@ const AuthFormBook3D = () => {
         initialValues: { email: "", password: "" },
         validationSchema: Yup.object({
             email: Yup.string().email("Invalid email").required("Required"),
-            password: Yup.string().required("Required")
+            password: Yup.string().min(6, "Minimum 6 characters").required("Required")
         }),
-        onSubmit: (values) => {
-            console.log("LOGIN:", values);
-            setMessage("✅ Login successful!");
-            setTimeout(() => {
-                setMessage("")
-            }, 4000);
+        onSubmit: async (values) => {
+            try {
+                const res = await fetch('http://localhost:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(values)
+                });
+
+                const data = await res.json();
+                console.log('LOGIN RESPONSE:', data);
+
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                setMessage('✅ Login successful!');
+                setTimeout(() => {
+                    setMessage('');
+                    props.setLogin(true);
+                    navigate('/characters');
+                }, 1500);
+
+            } catch (err) {
+                setMessage('❌ ' + err.message);
+            }
         }
+
     });
 
     const registerFormik = useFormik({
@@ -55,18 +83,48 @@ const AuthFormBook3D = () => {
                 .oneOf([Yup.ref("password"), null], "Passwords must match")
                 .required("Required")
         }),
-        onSubmit: (values) => {
-            console.log("REGISTER:", values);
-            setMessage("✅ Registration successful!");
-            setTimeout(() => {
-                setMessage("")
-            }, 4000);
+        onSubmit: async (values) => {
+            try {
+                const res = await fetch('http://localhost:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: values.name,
+                        email: values.email,
+                        password: values.password
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+
+                setMessage('✅ Registration successful!');
+                setTimeout(() => {
+                    setMessage('');
+                    setActiveTab('login');
+                    registerFormik.resetForm();
+                }, 1500);
+
+            } catch (err) {
+                setMessage('❌ ' + err.message);
+            }
         }
+
+
     });
 
     return (
         <div className="container">
             <Helmet>
+                <meta
+                    name="register form"
+                    content="Marvel login or register form"
+                />
                 <title>{activeTab === "login" ? "Login" : "Register"}</title>
             </Helmet>
 

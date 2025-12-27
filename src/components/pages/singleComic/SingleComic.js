@@ -1,31 +1,27 @@
 import { Link, useParams } from 'react-router-dom';
-import { useEffect, useState ,useCallback} from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Helmet } from 'react-helmet';
 
 import Spinner from "../../spiner/Spiner";
 import ErrorMessage from "../../errorMessage/ErrorMessage";
-import MarvelService from "../../../services/MarvelService";
+import useMarvelService from "../../../services/MarvelService";
 import Skeleton from '../../skeleton/Skeleton';
 
 import './singleComic.scss';
 
-const marvelService = new MarvelService();
-
 const SingleComic = () => {
 
+    const { getComics, process,setProcess ,clearError} = useMarvelService();
 
     const [comic, setComic] = useState(null)
-    const [Loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
     const { comicId } = useParams()
 
 
     const updateComic = useCallback(() => {
-        onComicLoading();
-        marvelService
-            .getComics(comicId)
+        clearError()
+        getComics(comicId)
             .then(onComicLoad)
-            .catch(onError);
+            .then(()=> setProcess('confirmed'))
     }, [comicId]);
 
 
@@ -36,29 +32,32 @@ const SingleComic = () => {
 
     const onComicLoad = (comic) => {
         setComic(comic)
-        setLoading(false)
     };
 
-    const onError = () => {
-        setLoading(false)
-        setError(true)
-    };
 
-    const onComicLoading = () => {
-        setLoading(true)
-    };
-
-    const skeleton = comic || Loading || error ? null : <Skeleton />;
-    const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = Loading ? <Spinner /> : null;
-    const content = !(Loading || error || !comic) ? <View comic={comic} /> : null;
+    const setContent = (process, comic) => {
+        switch (process) {
+            case 'waiting':
+                return <Skeleton />
+                break
+            case 'loadind':
+                return <Spinner />
+                break
+            case 'confirmed':
+                return <View comic={comic}/>
+                break
+            case 'error':
+                return <ErrorMessage />
+                break
+            default:
+                throw new Error('Unexpected process state !');
+                break
+        }
+    }
 
     return (
         <div className="single-comic">
-            {skeleton}
-            {errorMessage}
-            {spinner}
-            {content}
+            {setContent(process,comic)}
         </div>
     )
 }

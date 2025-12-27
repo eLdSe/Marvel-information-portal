@@ -6,18 +6,17 @@ import {
 
 import Spinner from "../spiner/Spiner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 
 import "./charList.scss";
 
 
-const marvelService = new MarvelService();
-
 const CharList = (props) => {
+  const marvelService = useMarvelService();
 
-  const [charList, setCharList] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [charList, setCharList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [newItemLoading, setNewItemLoading] = useState(false)
   const [offset, setOffset] = useState(0)
   const [charEnded, setCharEnded] = useState(false)

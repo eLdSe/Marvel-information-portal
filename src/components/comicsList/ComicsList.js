@@ -6,33 +6,30 @@ import {
 } from 'react-transition-group';
 
 
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spiner/Spiner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './comicsList.scss';
 
 
-const marvelService = new MarvelService();
-
 const ComicsList = () => {
+
+    const { getAllComics, loading,error } = useMarvelService();
 
     const [comicsList, setComicsList] = useState([]);
     const [newItemLoading, setnewItemLoading] = useState(false);
     const [offset, setOffset] = useState(0);
     const [comicsEnded, setComicsEnded] = useState(false);
     const [comicsClose, setComicsClose] = useState(false)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
     const refs = useRef([])
 
 
-// eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         onRequest(offset, true);
     }, [])
-
-// eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         refs.current = new Array(comicsList.length)
             .fill(null)
@@ -42,16 +39,9 @@ const ComicsList = () => {
 
     const onRequest = (offset, initial) => {
         initial ? setnewItemLoading(false) : setnewItemLoading(true);
-        marvelService
-            .getAllComics(offset)
+        getAllComics(offset)
             .then(onComicsListLoaded)
-            .catch(onError)
     }
-
-    const onError = () => {
-        setError(true)
-        setLoading(false)
-    };
 
     const onComicsListLoaded = (newComicsList) => {
         let ended = false;
@@ -61,7 +51,6 @@ const ComicsList = () => {
             close = true
         }
         setComicsList([...comicsList, ...newComicsList]);
-        setLoading(false)
         setnewItemLoading(false);
         setOffset(offset + 8);
         setComicsEnded(ended);

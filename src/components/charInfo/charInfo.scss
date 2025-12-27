@@ -26,7 +26,7 @@
         }
 
         @media (max-width: 768px) {
-            position: static; // sticky ломает лэйаут на телефонах
+            position: static;
             padding: 20px;
         }
 

@@ -1,122 +1,152 @@
-import { useState, useRef } from "react";
+import { useRef, useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from '../../services/MarvelService';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 
-import "./charSearchForm.scss";
+import decoration from '../../resources/img/Avengers_logo.png'
+import './charSearchForm.scss';
 
+const levenshtein = (a, b) => {
+    a = a.toLowerCase();
+    b = b.toLowerCase();
 
-const marvelService = new MarvelService();
-
-const CharSearchForm = () => {
-    const [char, setChar] = useState(null);
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-
-    const resultRef = useRef(null);
-    const inputRef = useRef(null);
-
-    const updateChar = (name) => {
-        setError(false);
-        setLoading(true);
-
-        marvelService
-            .getCharacterByName(name)
-            .then(res => {
-                setLoading(false);
-
-                if (res.length > 0) {
-                    setChar(res[0]);
-                    setError(false);
-                } else {
-                    setChar(null);
-                    setError(true);
-                }
-            })
-            .catch(() => {
-                setLoading(false);
-                setChar(null);
-                setError(true);
-            });
-    };
-
-    const handleBlur = () => {
-        setTimeout(() => {
-            if (
-                resultRef.current &&
-                resultRef.current.contains(document.activeElement)
-            ) {
-                return;
-            }
-
-            setChar(null);
-            setError(false);
-        }, 150);
-    };
-
-    return (
-        <div className="char__search">
-            <h2 className="char__search-title">Find a character</h2>
-
-            <Formik
-                initialValues={{ name: '' }}
-                validationSchema={Yup.object({
-                    name: Yup.string()
-                })}
-                onSubmit={({ name }) => updateChar(name)}
-            >
-                <Form className="char__search-form">
-                    <Field
-                        name="name"
-                        type="text"
-                        placeholder="Enter character name..."
-                        className="char__search-input"
-                        innerRef={inputRef}
-                        onBlur={handleBlur}
-                    />
-
-                    <button type="submit" className="char__search-btn" disabled={loading}>
-                        {loading ? "Searching..." : "Search"}
-                    </button>
-
-                    <FormikErrorMessage
-                        name="name"
-                        component="div"
-                        className="char__search-error"
-                    />
-                </Form>
-            </Formik>
-
-            {char && !error && (
-                <div className="char__search-result" ref={resultRef}>
-                    <div className="char__search-card">
-                        <a href={`/characters/${char.id}`}>
-                            <img
-                                src={char.thumbnail}
-                                alt={char.name}
-                                className="char__search-img char__search-img--clickable"
-                            />
-                        </a>
-                        <div className="char__search-info">
-                            <h3>{char.name}</h3>
-                            <a className="char__search-link" href={`/characters/${char.id}`}>
-                                Go to page
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {error && (
-                <p className="char__search-error">
-                    Character not found
-                </p>
-            )}
-        </div>
+    const matrix = Array.from({ length: a.length + 1 }, () =>
+        Array(b.length + 1).fill(0)
     );
 
+    for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+    for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+
+            matrix[i][j] = Math.min(
+                matrix[i - 1][j] + 1,
+                matrix[i][j - 1] + 1,
+                matrix[i - 1][j - 1] + cost
+            );
+        }
+    }
+
+    return matrix[a.length][b.length];
 };
+
+
+const CharSearchForm = () => {
+    const [char, setChar] = useState({});
+    const searchRef = useRef(null)
+    const [term, setTerm] = useState('');
+
+    const { error, getCharacterByName, clearError } = useMarvelService();
+
+
+    useEffect(() => {
+        updateChar()
+    }, [])
+
+    const onCharLoaded = (char) => {
+        setChar(char);
+    }
+
+    const updateChar = (name) => {
+        clearError();
+
+        getCharacterByName(name)
+            .then(onCharLoaded);
+    }
+
+    const searchCharacters = (items, term) => {
+        if (!term) return items;
+
+        const normalizedTerm = term.toLowerCase();
+
+        return items.filter(item => {
+            const name = item.name.toLowerCase();
+
+            return (
+                name.startsWith(normalizedTerm) ||
+                name.includes(normalizedTerm) ||
+                levenshtein(name, normalizedTerm) <= 2
+            );
+        });
+    };
+
+
+    const onUpdateSearch = (value) => {
+        setTerm(value);
+    };
+
+
+    const errorMessage = error ? <div className="char__search-critical-error"><ErrorMessage /></div> : null;
+
+    const filteredChars = char ? searchCharacters(char, term) : null;
+
+    const results =
+        !term.trim()
+            ? null
+            : filteredChars && filteredChars.length > 0
+                ? (
+                    <ul className="char__search-list">
+                        {filteredChars.slice(0, 5).map(char => (
+                            <li key={char.id} className="char__search-item">
+                                <Link to={`/characters/${char.id}`}>
+                                    <img
+                                        src={char.thumbnail}
+                                        alt={char.name}
+                                    />
+                                    <span>{char.name}</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                )
+                : (
+                    <div className="char__search-error">
+                        The character was not found. Check the name and try again
+                    </div>
+                );
+
+
+    return (
+        <div className="char__search-form" ref={searchRef}>
+            <Formik
+                initialValues={{
+                    charName: ''
+                }}
+                validationSchema={Yup.object({
+                    charName: Yup.string()
+                })}
+                onSubmit={() => { }}
+            >
+                <Form>
+                    <label className="char__search-label" htmlFor="charName">Or find a character by name:</label>
+                    <div className="char__search-wrapper">
+                        <Field name="charName">
+                            {({ field }) => (
+                                <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Enter name"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        onUpdateSearch(e.target.value);
+                                    }}
+                                />
+                            )}
+                        </Field>
+                        <img src={decoration} alt="decoration" className='decoration' />
+                    </div>
+                    <FormikErrorMessage component="div" className="char__search-error" name="charName" />
+                </Form>
+            </Formik>
+            {results}
+            {errorMessage}
+        </div>
+    )
+}
 
 export default CharSearchForm;
