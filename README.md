@@ -6,6 +6,10 @@ The project was created as an educational pet project to demonstrate frontend de
 
 ---
 
+## 📸 Screenshots
+![Home Page](x-men.png)
+
+---
 ## 🚀 Project Overview
 
 This application allows users to explore Marvel characters and comics through a clean and responsive interface.  
