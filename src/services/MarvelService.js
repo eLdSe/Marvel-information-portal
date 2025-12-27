@@ -1,12 +1,13 @@
 import {useHttp} from '../hooks/http.hooks' 
 
 const useMarvelService = () => {
-    const { loading, request, error, clearError,process,setProcess} = useHttp()
+    const { loading, request, error, clearError,onProcess,setProcess} = useHttp()
 
     const _apiBase = 'https://marvel-server-zeta.vercel.app/';
-    const _apiKey = 'apikey=d4eecb0c66dedbfae4eab45d312fc1df'; /* this not my key, if you want to use it, you need to get your own key from Marvel Developer Portal */
+    const _apiKey = `apikey=${process.env.REACT_APP_API_KEY}`; 
     const _baseOffset = 0;
 
+    console.log('API KEY:', process.env.REACT_APP_API_KEY);
 
     const getAllCharacters = async (offset = _baseOffset) => {
         const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
@@ -73,7 +74,7 @@ const useMarvelService = () => {
         loading,
         error,
         clearError,
-        process,
+        onProcess,
         setProcess
     }
 

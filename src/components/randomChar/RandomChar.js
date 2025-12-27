@@ -13,7 +13,7 @@ const RandomChar = () => {
   const [char, setChar] = useState(null)
 
 
-  const { getCharacter,process, setProcess } = useMarvelService();
+  const { getCharacter,onProcess, setProcess } = useMarvelService();
 
   const onCharLoad = (char) => {
     setChar(char)
@@ -58,7 +58,7 @@ const RandomChar = () => {
 
   return (
     <div className="randomchar">
-      {setContent(process, char)}
+      {setContent(onProcess, char)}
       <div className="randomchar__static">
         <p className="randomchar__title">
           Random character for today!

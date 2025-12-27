@@ -12,7 +12,7 @@ const CharInfo = ({ selectedChar }) => {
 
   const [char, setChar] = useState(null)
 
-  const { getCharacter, process, setProcess, clearError } = useMarvelService()
+  const { getCharacter, onProcess, setProcess, clearError } = useMarvelService()
 
   useEffect(() => {
     updateChar()
@@ -60,7 +60,7 @@ const CharInfo = ({ selectedChar }) => {
 
   return (
     <div className="char__info">
-      {setContent(process, char)}
+      {setContent(onProcess, char)}
     </div>
   );
 }

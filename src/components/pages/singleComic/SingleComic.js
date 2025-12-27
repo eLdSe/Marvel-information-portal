@@ -11,7 +11,7 @@ import './singleComic.scss';
 
 const SingleComic = () => {
 
-    const { getComics, process,setProcess ,clearError} = useMarvelService();
+    const { getComics, onProcess,setProcess ,clearError} = useMarvelService();
 
     const [comic, setComic] = useState(null)
     const { comicId } = useParams()
@@ -57,7 +57,7 @@ const SingleComic = () => {
 
     return (
         <div className="single-comic">
-            {setContent(process,comic)}
+            {setContent(onProcess,comic)}
         </div>
     )
 }
